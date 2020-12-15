@@ -6,6 +6,7 @@ pub struct SignalBase<T,R> {
     slots : Vec<(usize,Slot<T, R>)>,
 }
 
+#[derive(Clone)]
 pub struct Signal<T,R> {
     base : Arc<RefCell<SignalBase<T,R>>>,
 }
