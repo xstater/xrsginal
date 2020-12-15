@@ -110,18 +110,19 @@ impl<T,R> Drop for Guard<T,R> {
     }
 }
 
-pub struct Slot<T,R>{
+struct Slot<T,R>{
     function : Box<dyn FnMut(T) -> R + Send>,
     return_value : Option<R>
 }
 
 impl<T,R> Slot<T,R>{
-    pub fn emit(&mut self,value : T){
+    fn emit(&mut self,value : T){
         let value = (*self.function)(value);
         self.return_value = Some(value);
     }
 
-    pub fn return_value(&mut self) -> Option<R>{
+    #[allow(dead_code)]
+    fn return_value(&mut self) -> Option<R>{
         self.return_value.take()
     }
 }
