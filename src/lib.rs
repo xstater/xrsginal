@@ -46,8 +46,20 @@ impl<T,R> Signal<T,R> {
 
 }
 
-impl<T : Clone,R> Signal<T,R>{
+
+impl<T : Copy,R> Signal<T,R>{
     pub fn emit(&mut self,value : T){
+        if let Ok(guard) = self.base.lock() {
+            let mut base = guard.borrow_mut();
+            for (_, slot) in base.slots.iter_mut() {
+                slot.emit(value);
+            }
+        }
+    }
+}
+
+impl<T : Clone,R> Signal<T,R>{
+    pub fn emit_clone(&mut self,value : T){
         if let Ok(guard) = self.base.lock() {
             let mut base = guard.borrow_mut();
             for (_, slot) in base.slots.iter_mut() {
